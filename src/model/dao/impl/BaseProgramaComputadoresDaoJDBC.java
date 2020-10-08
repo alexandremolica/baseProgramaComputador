@@ -18,18 +18,18 @@ public class BaseProgramaComputadoresDaoJDBC implements BaseProgramaComputadores
 	private Connection conn;
 
 	private String sqlPrincipal = 		
-			"SELECT  prg_regist_program.no_regist\r\n" + 
-			"       ,prg_regist_program.dt_entrad_dimapro\r\n" + 
-			"       ,substr(prg_regist_program.tx_titulo_program,1,200) tx_titulo_program\r\n" + 
-			"       ,prg_regist_program.dt_lanc_program\r\n" + 
-			"       ,prg_regist_program.dt_protoc_externo\r\n" + 
-			"       ,prg_regist_program.cd_sigilo_program\r\n" + 
-			"       ,substr(prg_pfpj_procurador.nm_pfpj_compl,1,200) Nome_procurador\r\n" + 
+			"SELECT  prg_regist_program.no_regist \r\n" + 
+			"       ,prg_regist_program.dt_entrad_dimapro \r\n" + 
+			"       ,substr(prg_regist_program.tx_titulo_program,1,200) tx_titulo_program \r\n" + 
+			"       ,nvl(prg_regist_program.dt_lanc_program,\" \") dt_lanc_program \r\n" + 
+			"       ,prg_regist_program.dt_protoc_externo \r\n" + 
+			"       ,prg_regist_program.cd_sigilo_program \r\n" + 
+			"       ,nvl(substr(prg_pfpj_procurador.nm_pfpj_compl,1,200),\" \") Nome_procurador \r\n" + 
 			"       ,crp_programa_rpi.no_rpi Numero_da_RPI\r\n" + 
-			"       ,crp_programa_rpi.dt_publica_ptn Data_da_publicacao_RPI\r\n" + 
-			"       ,prg_despach.cd_despach Numero_do_despacho\r\n" + 
-			"       ,substr(prg_despach.tx_despach,1,450) Descricao_do_despacho\r\n" + 
-			"       ,prg_despach.ds_despach[1,450] Complemento_do_despacho\r\n" + 
+			"       ,crp_programa_rpi.dt_publica_ptn Data_da_publicacao_RPI \r\n" + 
+			"       ,prg_despach.cd_despach Numero_do_despacho \r\n" + 
+			"       ,prg_despach.ds_despach[1,450] Descricao_do_despacho \r\n"+
+			"       ,nvl(substr(prg_histor_regist.tx_motivo,1,400),\" \") Complemento_do_despacho \r\n" +
 			"       ,prg_regist_program.cd_regist_program \r\n" + 
 			"FROM prg_regist_program\r\n" + 
 			"-- procurador\r\n" + 
@@ -45,9 +45,8 @@ public class BaseProgramaComputadoresDaoJDBC implements BaseProgramaComputadores
 			"--Despacho prg_histor_regist\r\n" + 
 			"INNER JOIN prg_despach\r\n" + 
 			"        ON prg_histor_regist.cd_despach = prg_despach.cd_despach\r\n" + 
-			"WHERE prg_regist_program.dt_entrad_dimapro BETWEEN ? AND ?  \r\n" + 
-			"--WHERE prg_regist_program.dt_entrad_dimapro BETWEEN '2018-01-01 00:00:00' AND '2018-6-30 23:59:59'\r\n" + 
-			"--WHERE prg_regist_program.no_regist = '512018000824'  \r\n"  ;
+			"WHERE prg_regist_program.dt_entrad_dimapro BETWEEN ? AND ?  \r\n" +
+			"ORDER BY prg_regist_program.cd_regist_program \r\n" ;
 	
 
 	private String sqlLinguagem = 		
@@ -87,8 +86,6 @@ public class BaseProgramaComputadoresDaoJDBC implements BaseProgramaComputadores
 			"	INNER JOIN prg_pfpj prg_pfpj_titular\r\n" + 
 			"	        ON prg_titular_regist.cd_pfpj_program = prg_pfpj_titular.cd_pfpj\r\n" + 
 			"	WHERE prg_titular_regist.cd_regist_program = ?  ";
-
-	
 
 	public BaseProgramaComputadoresDaoJDBC(Connection conn) {
 		this.conn = conn;
@@ -140,7 +137,9 @@ public class BaseProgramaComputadoresDaoJDBC implements BaseProgramaComputadores
 	
 				//Titular
 				obj.setNomeDoTitular( getDetalhesEmUmaLinha(obj.getCdRegistProgram(),sqlTitular, "Nome_do_titular"));
-	
+				
+				//Complemento do Despacho
+				obj.setNomeDoTitular( getDetalhesEmUmaLinha(obj.getCdRegistProgram(),sqlTitular, "Nome_do_titular"));
 			}
 			
 			return list;
@@ -156,11 +155,17 @@ public class BaseProgramaComputadoresDaoJDBC implements BaseProgramaComputadores
 	}	
 
 	private BaseProgramaComputadores instanciaBaseProgramaComputadores(ResultSet rs) throws SQLException {
+		
 		BaseProgramaComputadores obj = new BaseProgramaComputadores();
 		String tituloPrograma="";
+		String ComplementoDoDespacho="";
 
+		ComplementoDoDespacho = rs.getString("Complemento_do_despacho");
+		ComplementoDoDespacho = ComplementoDoDespacho.replaceAll("[^a-zA-Z0-9Á«„√‚¬ı’Ù‘‡·ÈÌÛ˙¡…Õ”⁄\\/@\\(\\),\\.\\&\\-™∫\\+\\* ]", " ");
+		
 		tituloPrograma = rs.getString("tx_titulo_program");
-		tituloPrograma = tituloPrograma.replaceAll("[^a-zZ-Z1-9 ]", "");
+		tituloPrograma = tituloPrograma.replaceAll("[^a-zA-Z0-9Á«„√‚¬ı’Ù‘‡·ÈÌÛ˙¡…Õ”⁄\\/@\\(\\),\\.\\&\\-™∫\\+\\* ]", " ");
+		
 		
 		obj.setNumeroDoRegistro(rs.getString("no_regist"));
 		obj.setDataDoDeposito(rs.getString("dt_entrad_dimapro"));
@@ -174,7 +179,7 @@ public class BaseProgramaComputadoresDaoJDBC implements BaseProgramaComputadores
 		obj.setDataDaPublicacaoRPI(rs.getString("Data_da_publicacao_RPI")); 
 		obj.setNumeroDoDespacho(rs.getString("Numero_do_despacho")); 
 		obj.setDescricaoDoDespacho(rs.getString("Descricao_do_despacho"));
-		obj.setComplementoDoDespacho(rs.getString("Complemento_do_despacho"));
+		obj.setComplementoDoDespacho(ComplementoDoDespacho);
 		obj.setCdRegistProgram(rs.getString("cd_regist_program"));
 		return obj;
 		
@@ -209,6 +214,10 @@ public class BaseProgramaComputadoresDaoJDBC implements BaseProgramaComputadores
 				 resultado = resultado.substring(0, 450) + "...";
 		     }
 		    
+			if (sqlColuna.equals("Nome_do_titular") ) {
+				resultado = resultado.replaceAll("[^a-zA-Z0-9Á«„√‚¬ı’Ù‘‡·ÈÌÛ˙¡…Õ”⁄\\/@\\(\\),\\.\\&\\-™∫\\+\\* ]", " ");
+			}
+			
 			resultado = resultado.replaceAll("\r", "");
 			resultado = resultado.replaceAll("\t", "");
 			resultado = resultado.replaceAll("\n", "");
@@ -224,5 +233,5 @@ public class BaseProgramaComputadoresDaoJDBC implements BaseProgramaComputadores
 			DB.closePrepareStatement(stDet);
 		}
 	}
-
+	
 }

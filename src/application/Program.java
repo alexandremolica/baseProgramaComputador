@@ -31,19 +31,19 @@ public class Program {
 			
 			
 			System.out.println("====  baseProgramaComputadoresDao findAll - lista 1 ====");
-			list = baseProgramaComputadoresDao.findAll("2018-01-01 00:00:00" , "2018-04-01 23:59:59");
+			list = baseProgramaComputadoresDao.findAll("2018-01-01 00:00:00" , "2018-04-15 23:59:59");
 	
 			System.out.println("==== Cria conexao banco -  2 ====");
 			BaseProgramaComputadoresDao baseProgramaComputadoresDao2 = new DaoFactory().createBaseProgramaComputadoresDao();
 			
 			System.out.println("====  baseProgramaComputadoresDao findAll - lista 2 ====");
-			list2 = baseProgramaComputadoresDao2.findAll("2018-04-02 00:00:00" , "2018-08-01 23:59:59");
+			list2 = baseProgramaComputadoresDao2.findAll("2018-04-16 00:00:00" , "2018-08-15 23:59:59");
 	
 			System.out.println("==== Cria conexao banco -  3 ====");
 			BaseProgramaComputadoresDao baseProgramaComputadoresDao3 = new DaoFactory().createBaseProgramaComputadoresDao();
 			
 			System.out.println("====  baseProgramaComputadoresDao findAll - lista 3 ====");
-			list3 = baseProgramaComputadoresDao3.findAll("2018-08-02 00:00:00" , "2018-12-31 23:59:59");
+			list3 = baseProgramaComputadoresDao3.findAll("2018-08-16 00:00:00" , "2018-12-31 23:59:59");
 	
 			
 		}
