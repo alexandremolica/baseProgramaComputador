@@ -64,9 +64,11 @@ public class Program {
 		System.out.println();
 		System.out.println("== GERAR ARQUIVO CSV ==");
 		
-		String path2 = "c:\\temp\\csv-baseProgramaComputadores.csv";
+		String path2 = "c:\\temp\\csv-baseProgramaComputadores2.csv";
 		
 		try(BufferedWriter bw = new BufferedWriter(new FileWriter(path2))){
+			System.out.println("=== cabecalho do dados ===");
+
 			//Linha de titulos do arquivo
 			bw.write(
 							"NumeroDoRegistro |"
@@ -90,7 +92,7 @@ public class Program {
 							+ "CodigoSigiloDoPrograma"
 					);
 			bw.newLine();
-			
+			System.out.println("=== corpo do dados ===");
 			//Linha de dados
 			for(BaseProgramaComputadores obj : list) {
 				bw.write(setDetailFileLine(obj));
@@ -111,25 +113,27 @@ public class Program {
 	
 	public static String setDetailFileLine (BaseProgramaComputadores base){
 		String line;
-		line =  base.getNumeroDoRegistro()+" |"
-				+ base.getDataDoDeposito()+" |" 
-				+ base.getLinguagem()+"|"
-				+ base.getCampoDeAplicacao()+" |"
+		line =  base.getNumeroDoRegistro().trim()+" |"
+				+ base.getDataDoDeposito().trim()+" |" 
+				+ base.getLinguagem().trim()+"|"
+				+ base.getCampoDeAplicacao().trim()+" |"
 				//+ base.getDescricaoDoCampoDeAplicacao()+"|"
-				+ base.getTituloDoPrograma()+" |"
-				+ base.getTipoDePrograma()+" |"
+				+ base.getTituloDoPrograma().trim()+" |"
+				+ base.getTipoDePrograma().trim()+" |"
 				//+ base.getDescricaoDoTipoDePrograma()+"|"
-				+ base.getNomeDoTitular()+" |"
-				+ base.getNomeDoAutor()+" |"
-				+ base.getNomeProcurador()+" |"
-				+ base.getNumeroDaRPI()+" |"
-				+ base.getDataDaPublicacaoRPI()+" |"
-				+ base.getNumeroDoDespacho()+" |"
-				+ base.getDescricaoDoDespacho()+" |"
-				+ base.getComplementoDoDespacho()+" |"
-				+ base.getDataDeLancamento()+" |"
-				+ base.getDataProtocoloExterno()+" |"
-				+ base.getCodigoSigiloDoPrograma();
+				+ base.getNomeDoTitular().trim()+" |"
+				+ base.getNomeDoAutor().trim()+" |"
+				+ base.getNomeProcurador().trim()+" |"
+				+ base.getNumeroDaRPI().trim()+" |"
+				+ base.getDataDaPublicacaoRPI().trim()+" |"
+				+ base.getNumeroDoDespacho().trim()+" |"
+				
+				+ base.getDescricaoDoDespacho().trim()+" |"
+				+ base.getComplementoDoDespacho().trim()+" |"
+				
+				+ base.getDataDeLancamento().trim()+" |"
+				+ base.getDataProtocoloExterno().trim()+" |"
+				+ base.getCodigoSigiloDoPrograma().trim();
 		
 		line = line.replaceAll("\r", "");
 		line = line.replaceAll("\t", "");

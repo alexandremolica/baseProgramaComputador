@@ -161,10 +161,17 @@ public class BaseProgramaComputadoresDaoJDBC implements BaseProgramaComputadores
 		String ComplementoDoDespacho="";
 
 		ComplementoDoDespacho = rs.getString("Complemento_do_despacho");
-		ComplementoDoDespacho = ComplementoDoDespacho.replaceAll("[^a-zA-Z0-9çÇãÃâÂõÕôÔàáéíóúÁÉÍÓÚ\\/@\\(\\),\\.\\&\\-ªº\\+\\* ]", " ");
+		ComplementoDoDespacho = ComplementoDoDespacho.replaceAll("[^a-zA-Z0-9çÇãÃâÂõÕôÔàáéêíóúÁÉÊÍÓÚ\\/@\\(\\),\\.\\&\\-ªº\\+\\* ]", " ");
 		
 		tituloPrograma = rs.getString("tx_titulo_program");
-		tituloPrograma = tituloPrograma.replaceAll("[^a-zA-Z0-9çÇãÃâÂõÕôÔàáéíóúÁÉÍÓÚ\\/@\\(\\),\\.\\&\\-ªº\\+\\* ]", " ");
+		tituloPrograma = tituloPrograma.replaceAll("[^a-zA-Z0-9çÇãÃâÂõÕôÔàáéêíóúÁÉÊÍÓÚ\\/@\\(\\),\\.\\&\\-ªº\\+\\* ]", " ");
+		
+		if (tituloPrograma.length() > 200) {
+			tituloPrograma = tituloPrograma.substring(0, 200)+"...";
+		}
+		if (ComplementoDoDespacho.length() > 200) {
+			ComplementoDoDespacho= ComplementoDoDespacho.substring(0, 200)+"...";
+		}
 		
 		
 		obj.setNumeroDoRegistro(rs.getString("no_regist"));
@@ -173,7 +180,6 @@ public class BaseProgramaComputadoresDaoJDBC implements BaseProgramaComputadores
 		obj.setDataDeLancamento(rs.getString("dt_lanc_program")); 
 		obj.setDataProtocoloExterno(rs.getString("dt_protoc_externo"));
 		obj.setCodigoSigiloDoPrograma(rs.getString("cd_sigilo_program"));
-		//obj.setNomeDoTitular(rs.getString("Nome_do_titular")); 
 		obj.setNomeProcurador(rs.getString("Nome_procurador"));
 		obj.setNumeroDaRPI(rs.getString("Numero_da_RPI"));
 		obj.setDataDaPublicacaoRPI(rs.getString("Data_da_publicacao_RPI")); 
@@ -210,12 +216,12 @@ public class BaseProgramaComputadoresDaoJDBC implements BaseProgramaComputadores
 			if(resultado == null) {
 				resultado = "";
 			}
-			if(resultado.length() > 450){            
-				 resultado = resultado.substring(0, 450) + "...";
+			if(resultado.length() > 200){            
+				 resultado = resultado.substring(0, 200) + "...";
 		     }
 		    
 			if (sqlColuna.equals("Nome_do_titular") ) {
-				resultado = resultado.replaceAll("[^a-zA-Z0-9çÇãÃâÂõÕôÔàáéíóúÁÉÍÓÚ\\/@\\(\\),\\.\\&\\-ªº\\+\\* ]", " ");
+				resultado = resultado.replaceAll("[^a-zA-Z0-9çÇãÃâÂõÕôÔàáéêíóúÁÉÊÍÓÚ\\/@\\(\\),\\.\\&\\-ªº\\+\\* ]", " ");
 			}
 			
 			resultado = resultado.replaceAll("\r", "");
